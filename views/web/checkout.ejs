@@ -1,0 +1,173 @@
+<div class="main-banner inner" id="home">
+    <!-- header -->
+    <header class="header">
+        <div class="container-fluid px-lg-5">
+            <!-- nav -->
+            <nav class="py-4">
+                <div id="logo">
+                    <h1>
+                        <a href="/"><img src="/assets/web/images/logomain.png" width="90px" height="90px">
+                        </a>
+                    </h1>
+                </div>
+
+                <label for="drop" class="toggle">Menu</label>
+                <input type="checkbox" id="drop" />
+                <ul class="menu mt-2">
+                    <li><a href="/">Trang chủ</a></li>
+                    <li>
+                        <!-- First Tier Drop Down -->
+                        <label for="drop-2" class="toggle">Danh mục giày <span class="fa fa-angle-down" aria-hidden="true"></span> </label>
+                        <a href="/shop">Danh mục giày<span class="fa fa-angle-down" aria-hidden="true"></span></a>
+                        <input type="checkbox" id="drop-2" />
+                        <ul>
+                            <%data.cates.forEach(function(cate){%>
+                                <li>
+                                    <a href="/shop/<%=cate.slug%>">
+                                        <%=cate.name%>
+                                    </a>
+                                </li>
+                                <%})%>
+                        </ul>
+                    </li>
+                    <li><a href="/about">Giới thiệu</a></li>
+                    <li><a href="/blog">Blog</a></li>
+                    <li><a href="/contact">Liên hệ</a></li>
+                    <li class="active"><a href="/checkout">Giỏ hàng<small>(<%=data.lengthCart%>)</small></a></li>
+                    <% if (user) {%>
+                        <li class="user-detail "><a href="/logout" class="btn btn-login btn-user px-2"><span style="text-transform: capitalize;">Chào
+                            <%=user.name%></span> | Đăng xuất</a></li>
+                        <%} else {%>
+                            <li class=" user-detail "><a href="/login" class="btn btn-login btn-user px-2 ">Đăng nhập</a></li>
+                            <%}%>
+                                <% if (user && (user.isAdmin == 1 || user.isAdmin == 0)) {%>
+                                    <li>
+                                        <li class=" user-detail "><a href="/admin/" class="btn btn-login btn-user px-2 ">Admin Area</a></li>
+                                    </li>
+                                    <% }%>
+                </ul>
+            </nav>
+            <!-- //nav -->
+        </div>
+    </header>
+</div>
+
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="/">Trang chủ</a>
+    </li>
+    <li class="breadcrumb-item active">Giỏ hàng</li>
+</ol>
+<%-include("./partials/message")%>
+    <section class="ab-info-main py-md-5 py-4">
+        <div class="container py-md-3">
+            <!-- top Products -->
+            <div class="row">
+                <div class="col cart col-lg-8">
+                    <h2>Giỏ hàng</h2>
+                    <hr>
+                    <% if (data.cart != undefined) {%>
+                        <table class="table table-striped table-hover">
+                            <thead class="thead-dark">
+                                <tr class="text-center">
+                                    <!-- <th scope="col">Ảnh sản phẩm</th> -->
+                                    <th scope="col">Tên</th>
+                                    <th scope="col">Số lượng</th>
+                                    <th></th>
+                                    <th scope="col">Đơn giá</th>
+                                    <th scope="col">Tổng cộng</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <% var total =0 %>
+                                <tbody>
+                                    <% data.cart.forEach(function(item){%>
+                                        <% var sub = item.qty * item.price%>
+                                            <% total += +sub%>
+                                                <tr scope="row" class="text-center">
+                                                    <!-- <td><img src="data:jpeg;base64,<%=item.image%>" width="80px" height="80px"></td> -->
+                                                    <td>
+                                                        <%= item.name%>
+                                                    </td>
+                                                    <td>
+                                                        <%= item.qty%>
+                                                    </td>
+                                                    <td>
+                                                        <div style="width:50px">
+                                                            <a href="/cart/update/<%= item.slug%>?action=add" style="color: #121212"><b>+</b></a>&nbsp;&nbsp;&nbsp;
+                                                            <a href="/cart/update/<%= item.slug%>?action=remove" style="color: #121212"><b>-</b></a>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <%= item.price%>
+                                                    </td>
+                                                    <td>
+                                                        <%= item.price*item.qty%>
+                                                    </td>
+                                                    <td><a href="/cart/update/<%= item.slug%>?action=clear"><span class="fa fa-trash-o" style="color: #121212"></span></a>&nbsp;</td>
+                                                </tr>
+                                                <%})%>
+                                                    <tr>
+                                                        <td colspan="7" align="right"><b>Total: </b><i>
+                                                            <%= total%> <span>VND</span></i></td>
+                                                    </tr>
+                                                    <!-- <tr>
+                                                        <td>
+                                                            <a class="clearcart btn btn-danger" href="/cart/clear">Xóa toàn bộ</a>
+                                                        </td> -->
+                                                    <!-- <td colspan="6" right>
+                                                            <a class="btn btn-primary buynow" href="/cart/clear">Mua ngay</a>
+                                                        </td> -->
+                                                    <!-- </tr> -->
+
+                                </tbody>
+                        </table>
+                        <a class="clearcart btn btn-danger" href="/cart/clear">Xóa toàn bộ</a>
+                        <!-- <div class="" style="float: right;">
+                            <p><b>Total:</b>
+                                <%= data.total%> <span>VND</span></p>
+                        </div> -->
+                        <% } else {%>
+                            <h4 class="text-center"><img src="assets/web/images/empty-cart.png" alt="gio-hang-trong" width="400px" height="300px"></h4>
+
+                            <% } %>
+                </div>
+                <div class="col col-lg-4 cart">
+                    <h2>Đặt hàng</h2>
+                    <hr>
+                    <form action="/checkout" method="POST">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput">Tên khách hàng</label>
+                            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Tên" name="name" value="<%=name%>">
+                        </div>
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">Email</label>
+                            <input type="email" class="form-control" id="formGroupExampleInput2" placeholder="Email" name="email" value="<%=email%>">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Điện thoại</label>
+                            <input type="number" class="form-control" id="phone" placeholder="Điện thoại" name="phone" value="<%=phone%>">
+                        </div>
+                        <div class="form-group">
+                            <label>Địa chỉ</label>
+                            <textarea class="form-control" aria-label="With textarea" name="address" placeholder="Địa chỉ"><%=address%></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Ghi chú</label>
+                            <textarea class="form-control" aria-label="With textarea" name="note" placeholder="Ghi chú" value="<%=note%>"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-user btn-block mt-2" style="font-size: 1em;">Xác nhận mua hàng    </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <script>
+            $(function() {
+                $('a.clearcart').on('click', function() {
+                    if (!confirm('Bạn chắc chắn muốn xóa tất cả?'))
+                        return false;
+                })
+            })
+        </script>
+    </section>

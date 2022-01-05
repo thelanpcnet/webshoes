@@ -1,7 +1,9 @@
-INSTALL
+# webshoes
+
+**INSTALL**
 
 npm i
 
-Run web
+**Run web**
 
 npm run dev
